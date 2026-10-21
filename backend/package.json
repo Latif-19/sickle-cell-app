@@ -1,0 +1,27 @@
+{
+  "name": "sickle-cell-backend",
+  "version": "1.0.0",
+  "description": "Backend configuration and API services for Sickle Cell App using Supabase",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "sickle-cell",
+    "supabase",
+    "authentication",
+    "database"
+  ],
+  "author": "",
+  "license": "ISC"
+}
