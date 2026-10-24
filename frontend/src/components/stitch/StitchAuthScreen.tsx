@@ -116,7 +116,7 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
           setLoading(false);
           return;
         }
-        if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber || !hasSymbol) {
+        if (!isPasswordValid) {
           setError('Please ensure your password meets all criteria in the checklist below.');
           setLoading(false);
           return;
@@ -677,83 +677,70 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
 
                       {/* Live Password Requirements Checklist */}
                       {activeTab === 'signup' && !usePartnerCode && (
-                        <div className="p-3.5 bg-surface-container-lowest/85 backdrop-blur-sm rounded-2xl border border-outline/25 shadow-xs flex flex-col gap-2.5 animate-in fade-in duration-200">
-                          <div className="flex items-center justify-between">
-                            <span className="font-label-sm text-[11px] font-extrabold text-inverse-surface uppercase tracking-wider">
-                              Password Requirements
-                            </span>
-                            <span className={`text-[11px] font-bold ${
-                              isPasswordValid ? 'text-secondary font-black' : 'text-on-surface-variant'
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 py-1 text-xs animate-in fade-in duration-200">
+                          <div className={`flex items-center gap-2 transition-colors ${
+                            hasMinLength ? 'text-black font-bold' : 'text-black/50 font-medium'
+                          }`}>
+                            <span className={`w-4 h-4 rounded flex items-center justify-center text-[10px] shrink-0 transition-all ${
+                              hasMinLength
+                                ? 'bg-black text-white font-black'
+                                : 'border border-black/30 bg-transparent text-transparent'
                             }`}>
-                              {isPasswordValid ? 'All criteria met ✓' : 'Incomplete'}
+                              ✓
                             </span>
+                            <span>At least 8 characters</span>
                           </div>
 
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                            <div className={`flex items-center gap-2 transition-colors ${
-                              hasMinLength ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                          <div className={`flex items-center gap-2 transition-colors ${
+                            hasUppercase ? 'text-black font-bold' : 'text-black/50 font-medium'
+                          }`}>
+                            <span className={`w-4 h-4 rounded flex items-center justify-center text-[10px] shrink-0 transition-all ${
+                              hasUppercase
+                                ? 'bg-black text-white font-black'
+                                : 'border border-black/30 bg-transparent text-transparent'
                             }`}>
-                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
-                                hasMinLength
-                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
-                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
-                              }`}>
-                                ✓
-                              </span>
-                              <span>At least 8 characters</span>
-                            </div>
+                              ✓
+                            </span>
+                            <span>One uppercase letter (A-Z)</span>
+                          </div>
 
-                            <div className={`flex items-center gap-2 transition-colors ${
-                              hasUppercase ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                          <div className={`flex items-center gap-2 transition-colors ${
+                            hasLowercase ? 'text-black font-bold' : 'text-black/50 font-medium'
+                          }`}>
+                            <span className={`w-4 h-4 rounded flex items-center justify-center text-[10px] shrink-0 transition-all ${
+                              hasLowercase
+                                ? 'bg-black text-white font-black'
+                                : 'border border-black/30 bg-transparent text-transparent'
                             }`}>
-                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
-                                hasUppercase
-                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
-                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
-                              }`}>
-                                ✓
-                              </span>
-                              <span>One uppercase letter (A-Z)</span>
-                            </div>
+                              ✓
+                            </span>
+                            <span>One lowercase letter (a-z)</span>
+                          </div>
 
-                            <div className={`flex items-center gap-2 transition-colors ${
-                              hasLowercase ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                          <div className={`flex items-center gap-2 transition-colors ${
+                            hasNumber ? 'text-black font-bold' : 'text-black/50 font-medium'
+                          }`}>
+                            <span className={`w-4 h-4 rounded flex items-center justify-center text-[10px] shrink-0 transition-all ${
+                              hasNumber
+                                ? 'bg-black text-white font-black'
+                                : 'border border-black/30 bg-transparent text-transparent'
                             }`}>
-                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
-                                hasLowercase
-                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
-                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
-                              }`}>
-                                ✓
-                              </span>
-                              <span>One lowercase letter (a-z)</span>
-                            </div>
+                              ✓
+                            </span>
+                            <span>One number (0-9)</span>
+                          </div>
 
-                            <div className={`flex items-center gap-2 transition-colors ${
-                              hasNumber ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                          <div className={`sm:col-span-2 flex items-center gap-2 transition-colors ${
+                            hasSymbol ? 'text-black font-bold' : 'text-black/50 font-medium'
+                          }`}>
+                            <span className={`w-4 h-4 rounded flex items-center justify-center text-[10px] shrink-0 transition-all ${
+                              hasSymbol
+                                ? 'bg-black text-white font-black'
+                                : 'border border-black/30 bg-transparent text-transparent'
                             }`}>
-                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
-                                hasNumber
-                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
-                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
-                              }`}>
-                                ✓
-                              </span>
-                              <span>One number (0-9)</span>
-                            </div>
-
-                            <div className={`sm:col-span-2 flex items-center gap-2 transition-colors ${
-                              hasSymbol ? 'text-secondary font-bold' : 'text-on-surface-variant'
-                            }`}>
-                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
-                                hasSymbol
-                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
-                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
-                              }`}>
-                                ✓
-                              </span>
-                              <span>One special symbol (!@#$%^&*...)</span>
-                            </div>
+                              ✓
+                            </span>
+                            <span>One special symbol (!@#$%^&*...)</span>
                           </div>
                         </div>
                       )}
@@ -766,7 +753,7 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
                             </label>
                             {confirmPassword && (
                               <span className={`font-label-sm text-[11px] font-bold ${
-                                password === confirmPassword ? 'text-secondary' : 'text-amber-800'
+                                password === confirmPassword ? 'text-black' : 'text-amber-900'
                               }`}>
                                 {password === confirmPassword ? '✓ Passwords match' : '✗ Passwords do not match'}
                               </span>
