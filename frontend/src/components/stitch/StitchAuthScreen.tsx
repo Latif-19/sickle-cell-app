@@ -16,8 +16,6 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
   const [email, setEmail] = useState(profile?.email || '');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [partnerCode, setPartnerCode] = useState('');
-  const [usePartnerCode, setUsePartnerCode] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [genotype, setGenotype] = useState<Genotype>(profile?.genotype || 'AS');
@@ -638,45 +636,32 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
                       </div>
 
                       <div className="flex flex-col gap-1.5">
-                        <div className="flex items-center justify-between">
-                          <label className="font-label-md text-xs font-bold text-inverse-surface">
-                            {usePartnerCode ? 'Partner Access Code' : 'Password'}
-                          </label>
-                          <button
-                            className="font-label-sm text-[11px] uppercase tracking-wider text-inverse-surface underline underline-offset-2 hover:opacity-80 cursor-pointer font-bold"
-                            onClick={() => setUsePartnerCode(!usePartnerCode)}
-                            type="button"
-                          >
-                            {usePartnerCode ? 'Use Password' : 'Use Partner Code'}
-                          </button>
-                        </div>
+                        <label className="font-label-md text-xs font-bold text-inverse-surface">
+                          Password
+                        </label>
                         <div className="relative flex items-center">
-                          <Icon name={usePartnerCode ? 'pin' : 'key'} className="absolute left-4 text-outline" size={20} />
+                          <Icon name="key" className="absolute left-4 text-outline" size={20} />
                           <input
                             className="w-full h-13 pl-11 pr-11 py-3 bg-surface-container-lowest text-on-surface rounded-2xl font-body-md text-xs sm:text-sm placeholder:text-outline/70 focus:outline-none shadow-sm"
-                            placeholder={usePartnerCode ? 'e.g. SCT-742-PAIR' : '••••••••••••'}
+                            placeholder="••••••••••••"
                             required
-                            type={showPassword || usePartnerCode ? 'text' : 'password'}
-                            value={usePartnerCode ? partnerCode : password}
-                            onChange={(e) =>
-                              usePartnerCode ? setPartnerCode(e.target.value) : setPassword(e.target.value)
-                            }
+                            type={showPassword ? 'text' : 'password'}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
-                          {!usePartnerCode && (
-                            <button
-                              aria-label="Toggle password visibility"
-                              className="absolute right-3.5 text-outline hover:text-on-surface flex items-center justify-center p-1 cursor-pointer"
-                              onClick={() => setShowPassword(!showPassword)}
-                              type="button"
-                            >
-                              <Icon name={showPassword ? 'visibility_off' : 'visibility'} size={20} />
-                            </button>
-                          )}
+                          <button
+                            aria-label="Toggle password visibility"
+                            className="absolute right-3.5 text-outline hover:text-on-surface flex items-center justify-center p-1 cursor-pointer"
+                            onClick={() => setShowPassword(!showPassword)}
+                            type="button"
+                          >
+                            <Icon name={showPassword ? 'visibility_off' : 'visibility'} size={20} />
+                          </button>
                         </div>
                       </div>
 
                       {/* Live Password Requirements Checklist */}
-                      {activeTab === 'signup' && !usePartnerCode && (
+                      {activeTab === 'signup' && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-3 gap-y-1.5 py-1 text-xs animate-in fade-in duration-200">
                           <div className={`flex items-center gap-2 transition-colors ${
                             hasMinLength ? 'text-black font-bold' : 'text-black/50 font-medium'
