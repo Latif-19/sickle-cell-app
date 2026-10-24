@@ -120,7 +120,12 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
         }
         const { error: signUpError, needsEmailConfirmation } = await signUp(cleanEmail, password, name, genotype, role);
         if (signUpError) {
-          setError(signUpError.message);
+          const msg = signUpError.message;
+          if (msg.toLowerCase().includes('error sending confirmation email')) {
+            setError('Unable to send confirmation email (Supabase rate limit reached). To allow users to register instantly without email confirmation, toggle off "Confirm email" in Supabase Dashboard > Authentication > Providers > Email.');
+          } else {
+            setError(msg);
+          }
         } else if (needsEmailConfirmation) {
           setEmailVerificationPending(cleanEmail);
           setSuccessMsg(null);

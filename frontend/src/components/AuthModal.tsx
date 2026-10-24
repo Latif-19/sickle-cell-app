@@ -34,7 +34,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         }
         const { error: signUpError } = await signUp(email, password, name, genotype);
         if (signUpError) {
-          setError(signUpError.message);
+          const msg = signUpError.message;
+          if (msg.toLowerCase().includes('error sending confirmation email')) {
+            setError('Unable to send confirmation email (Supabase rate limit reached). To allow instant sign-ups, toggle off "Confirm email" in Supabase Dashboard > Authentication > Providers > Email.');
+          } else {
+            setError(msg);
+          }
         } else {
           onClose();
         }
