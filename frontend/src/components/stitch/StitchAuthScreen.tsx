@@ -201,26 +201,26 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
             By recording your hemoglobin genotype, our decision support platform provides accurate, personalized inheritance calculations while preserving complete medical privacy and confidentiality.
           </p>
 
-          {/* Value Props Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div className="bg-surface-container-low/70 backdrop-blur-xs p-5 rounded-3xl border border-surface-variant/40 shadow-xs flex flex-col gap-2">
-              <div className="w-10 h-10 rounded-2xl bg-primary-container text-on-surface flex items-center justify-center font-bold">
-                <Icon name="calculate" className="w-6 h-6 text-on-surface" size={24} />
+          {/* Value Props */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 pt-2">
+            <div className="flex flex-col gap-2.5">
+              <Icon name="calculate" className="w-7 h-7 text-secondary shrink-0" size={28} />
+              <div className="flex flex-col gap-1">
+                <h4 className="font-headline-sm text-sm sm:text-base font-bold text-on-surface">Exact Mendelian Ratios</h4>
+                <p className="font-body-sm text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                  Calculates precise 25%, 50%, and 100% reproductive risks for any parental combination.
+                </p>
               </div>
-              <h4 className="font-headline-sm text-sm font-bold text-on-surface">Exact Mendelian Ratios</h4>
-              <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
-                Calculates precise 25%, 50%, and 100% reproductive risks for any parental combination.
-              </p>
             </div>
 
-            <div className="bg-surface-container-low/70 backdrop-blur-xs p-5 rounded-3xl border border-surface-variant/40 shadow-xs flex flex-col gap-2">
-              <div className="w-10 h-10 rounded-2xl bg-secondary-container text-secondary flex items-center justify-center font-bold">
-                <Icon name="lock" className="w-6 h-6 text-secondary" size={24} />
+            <div className="flex flex-col gap-2.5">
+              <Icon name="lock" className="w-7 h-7 text-secondary shrink-0" size={28} />
+              <div className="flex flex-col gap-1">
+                <h4 className="font-headline-sm text-sm sm:text-base font-bold text-on-surface">Private & Confidential</h4>
+                <p className="font-body-sm text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+                  Your personal health genotype data and family planning decisions are strictly protected.
+                </p>
               </div>
-              <h4 className="font-headline-sm text-sm font-bold text-on-surface">Private & Confidential</h4>
-              <p className="font-body-sm text-xs text-on-surface-variant leading-relaxed">
-                Your personal health genotype data and family planning decisions are strictly protected.
-              </p>
             </div>
           </div>
 
