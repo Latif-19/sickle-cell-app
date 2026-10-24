@@ -32,11 +32,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           setLoading(false);
           return;
         }
+        if (password.length < 8 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+          setError('Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one number.');
+          setLoading(false);
+          return;
+        }
         const { error: signUpError } = await signUp(email, password, name, genotype);
         if (signUpError) {
           const msg = signUpError.message;
           if (msg.toLowerCase().includes('error sending confirmation email')) {
             setError('Unable to send confirmation email (Supabase rate limit reached). To allow instant sign-ups, toggle off "Confirm email" in Supabase Dashboard > Authentication > Providers > Email.');
+          } else if (
+            msg.toLowerCase().includes('abcdefghijklmnopqrstuvwxyz') ||
+            msg.toLowerCase().includes('password should contain') ||
+            msg.toLowerCase().includes('password should be at least')
+          ) {
+            setError('Password must contain at least 8 characters, an uppercase letter, a lowercase letter, and a number.');
           } else {
             setError(msg);
           }

@@ -33,6 +33,13 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
   const [resendSuccessMsg, setResendSuccessMsg] = useState<string | null>(null);
   const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null);
 
+  // Password Complexity Validation Criteria (Live Real-Time Checklist)
+  const hasMinLength = password.length >= 8;
+  const hasLowercase = /[a-z]/.test(password);
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const isPasswordValid = hasMinLength && hasLowercase && hasUppercase && hasNumber;
+
   const handleResendEmail = async (targetEmail: string) => {
     setResendingEmail(true);
     setResendSuccessMsg(null);
@@ -108,8 +115,8 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
           setLoading(false);
           return;
         }
-        if (password.length < 6) {
-          setError('Password must be at least 6 characters long');
+        if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber) {
+          setError('Please ensure your password meets all criteria in the checklist below.');
           setLoading(false);
           return;
         }
@@ -123,6 +130,12 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
           const msg = signUpError.message;
           if (msg.toLowerCase().includes('error sending confirmation email')) {
             setError('Unable to send confirmation email (Supabase rate limit reached). To allow users to register instantly without email confirmation, toggle off "Confirm email" in Supabase Dashboard > Authentication > Providers > Email.');
+          } else if (
+            msg.toLowerCase().includes('abcdefghijklmnopqrstuvwxyz') ||
+            msg.toLowerCase().includes('password should contain') ||
+            msg.toLowerCase().includes('password should be at least')
+          ) {
+            setError('Password does not meet the security criteria. Please follow the checklist below.');
           } else {
             setError(msg);
           }
@@ -256,9 +269,15 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
                         ? 'Email Rate Limit Exceeded'
                         : error.toLowerCase().includes('504')
                         ? 'SMTP Server Connection Timeout (HTTP 504)'
+                        : error.toLowerCase().includes('abcdefghijklmnopqrstuvwxyz') || error.toLowerCase().includes('password should contain')
+                        ? 'Password Requirements Not Met'
                         : error}
                     </span>
-                    {error.toLowerCase().includes('rate limit') ? (
+                    {error.toLowerCase().includes('abcdefghijklmnopqrstuvwxyz') || error.toLowerCase().includes('password should contain') ? (
+                      <p className="text-surface/80 text-xs font-normal leading-relaxed">
+                        Please ensure your password has at least 8 characters, with uppercase, lowercase, and numbers as shown in the checklist below.
+                      </p>
+                    ) : error.toLowerCase().includes('rate limit') ? (
                       <p className="text-surface/80 text-xs font-normal leading-relaxed">
                         Supabase free projects limit built-in emails to ~3-4 per hour. To sign in immediately without waiting, turn <strong>OFF &quot;Confirm email&quot;</strong> in your Supabase Dashboard under <strong>Authentication &rarr; Sign In / Providers &rarr; Email</strong>.
                       </p>
@@ -654,6 +673,76 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
                           )}
                         </div>
                       </div>
+
+                      {/* Live Password Requirements Checklist */}
+                      {activeTab === 'signup' && !usePartnerCode && (
+                        <div className="p-3.5 bg-surface-container-lowest/85 backdrop-blur-sm rounded-2xl border border-outline/25 shadow-xs flex flex-col gap-2.5 animate-in fade-in duration-200">
+                          <div className="flex items-center justify-between">
+                            <span className="font-label-sm text-[11px] font-extrabold text-inverse-surface uppercase tracking-wider">
+                              Password Requirements
+                            </span>
+                            <span className={`text-[11px] font-bold ${
+                              isPasswordValid ? 'text-secondary font-black' : 'text-on-surface-variant'
+                            }`}>
+                              {isPasswordValid ? 'All criteria met ✓' : 'Incomplete'}
+                            </span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                            <div className={`flex items-center gap-2 transition-colors ${
+                              hasMinLength ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                            }`}>
+                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
+                                hasMinLength
+                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
+                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
+                              }`}>
+                                ✓
+                              </span>
+                              <span>At least 8 characters</span>
+                            </div>
+
+                            <div className={`flex items-center gap-2 transition-colors ${
+                              hasUppercase ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                            }`}>
+                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
+                                hasUppercase
+                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
+                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
+                              }`}>
+                                ✓
+                              </span>
+                              <span>One uppercase letter (A-Z)</span>
+                            </div>
+
+                            <div className={`flex items-center gap-2 transition-colors ${
+                              hasLowercase ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                            }`}>
+                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
+                                hasLowercase
+                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
+                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
+                              }`}>
+                                ✓
+                              </span>
+                              <span>One lowercase letter (a-z)</span>
+                            </div>
+
+                            <div className={`flex items-center gap-2 transition-colors ${
+                              hasNumber ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                            }`}>
+                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
+                                hasNumber
+                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
+                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
+                              }`}>
+                                ✓
+                              </span>
+                              <span>One number (0-9)</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       {activeTab === 'signup' && (
                         <div className="flex flex-col gap-1.5 animate-in fade-in duration-200">
