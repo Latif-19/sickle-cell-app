@@ -33,12 +33,13 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
   const [resendSuccessMsg, setResendSuccessMsg] = useState<string | null>(null);
   const [unconfirmedEmail, setUnconfirmedEmail] = useState<string | null>(null);
 
-  // Password Complexity Validation Criteria (Live Real-Time Checklist)
+  // Password Complexity Validation Criteria (Live Real-Time Checklist matching Supabase)
   const hasMinLength = password.length >= 8;
   const hasLowercase = /[a-z]/.test(password);
   const hasUppercase = /[A-Z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
-  const isPasswordValid = hasMinLength && hasLowercase && hasUppercase && hasNumber;
+  const hasSymbol = /[^A-Za-z0-9]/.test(password);
+  const isPasswordValid = hasMinLength && hasLowercase && hasUppercase && hasNumber && hasSymbol;
 
   const handleResendEmail = async (targetEmail: string) => {
     setResendingEmail(true);
@@ -115,7 +116,7 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
           setLoading(false);
           return;
         }
-        if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber) {
+        if (!hasMinLength || !hasLowercase || !hasUppercase || !hasNumber || !hasSymbol) {
           setError('Please ensure your password meets all criteria in the checklist below.');
           setLoading(false);
           return;
@@ -739,6 +740,19 @@ export const StitchAuthScreen: React.FC<StitchAuthScreenProps> = ({ onSuccess })
                                 ✓
                               </span>
                               <span>One number (0-9)</span>
+                            </div>
+
+                            <div className={`sm:col-span-2 flex items-center gap-2 transition-colors ${
+                              hasSymbol ? 'text-secondary font-bold' : 'text-on-surface-variant'
+                            }`}>
+                              <span className={`w-4 h-4 rounded-md flex items-center justify-center text-[10px] shrink-0 font-bold transition-all ${
+                                hasSymbol
+                                  ? 'bg-secondary text-on-secondary shadow-xs ring-1 ring-secondary'
+                                  : 'border border-outline/40 bg-surface-container-lowest text-transparent'
+                              }`}>
+                                ✓
+                              </span>
+                              <span>One special symbol (!@#$%^&*...)</span>
                             </div>
                           </div>
                         </div>

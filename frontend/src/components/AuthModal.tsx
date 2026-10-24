@@ -32,8 +32,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           setLoading(false);
           return;
         }
-        if (password.length < 8 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
-          setError('Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, and one number.');
+        if (password.length < 8 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9]/.test(password)) {
+          setError('Password must be at least 8 characters long, containing at least one uppercase letter, one lowercase letter, one number, and one special symbol.');
           setLoading(false);
           return;
         }
